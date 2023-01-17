@@ -17,6 +17,23 @@ const app = Vue.createApp({
         }
     },
     methods:{
+
+        checkAPI(){
+             //從cookie取得token
+            var token = document.cookie.replace(/(?:(?:^|.*;\s*)bigtoken\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+            //把cookie放進header
+            axios.defaults.headers.common['Authorization'] = token;
+            //登入驗證
+            axios.post(`${this.url}/api/user/check`)
+                .then((res)=>{
+                    this.getProducts()
+                })
+                .catch((error)=>{
+                    //失敗傳送回login
+                    document.location.href="login.html";
+                })
+        },
+
         getProducts(){
 
             axios.get(`${this.url}/api/${this.path}/admin/products/all`)
@@ -36,8 +53,9 @@ const app = Vue.createApp({
             productsDom.show();
         },
         enterProducts(){
-
             //這區是有新增跟編輯
+
+
             if(this.alertProducts.id){
                  //此為編輯
                  axios.put(`${this.url}/api/${this.path}/admin/product/${this.alertProducts.id}`,{data:{...this.alertProducts}})
@@ -47,7 +65,7 @@ const app = Vue.createApp({
                     this.getProducts();
                  })
                  .catch((error)=>{
-                    alert('重新填寫');
+                    alert(error.data.message);
      
                  }) 
                  
@@ -61,7 +79,7 @@ const app = Vue.createApp({
                     this.getProducts();
                 })
                 .catch((error)=>{
-                    alert('重新填寫');
+                    alert(error.data.message);
                 })  
             }
         },
@@ -122,21 +140,9 @@ const app = Vue.createApp({
         //抓取dom 元素
         productsDom  = new bootstrap.Modal(document.getElementById('productModal'));
         delProductModal = new bootstrap.Modal(document.getElementById('delProductModal'));
-
-         //從cookie取得token
-        var token = document.cookie.replace(/(?:(?:^|.*;\s*)bigtoken\s*\=\s*([^;]*).*$)|^.*$/, "$1");
-        //把cookie放進header
-        axios.defaults.headers.common['Authorization'] = token;
-
-        //登入驗證
-        axios.post(`${this.url}/api/user/check`)
-            .then((res)=>{
-                this.getProducts()
-            })
-            .catch((error)=>{
-                //失敗傳送回login
-                document.location.href="login.html";
-            })
+        
+        this.checkAPI();
+        
         
     }
 })

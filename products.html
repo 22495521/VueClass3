@@ -98,11 +98,13 @@
                       </div>
                       <img class="img-fluid" :src="item" :alt="`圖片${key}`">
                   </div>
-                  <div v-if="!alertProducts.imagesUrl||alertProducts.imagesUrl[alertProducts.imagesUrl.length-1]!==''">
+                  <template v-if="!alertProducts.imagesUrl||alertProducts.imagesUrl[alertProducts.imagesUrl.length-1]!==''">                 
+                    <div>
                     <button class="btn btn-outline-primary btn-sm d-block w-100" @click="addAlertImg">
                       新增圖片
                     </button>
                   </div>
+                </template>
                   <div v-else>
                     <button class="btn btn-outline-danger btn-sm d-block w-100" @click="deleteAlertImg">
                       刪除圖片
@@ -130,12 +132,12 @@
                   <div class="row">
                     <div class="mb-3 col-md-6">
                       <label for="origin_price" class="form-label">原價</label>
-                      <input id="origin_price" type="number" min="0" class="form-control" placeholder="請輸入原價" v-model="alertProducts.origin_price">
+                      <input id="origin_price" type="number" min="0" class="form-control" placeholder="請輸入原價" v-model.number="alertProducts.origin_price">
                     </div>
                     <div class="mb-3 col-md-6">
                       <label for="price" class="form-label">售價</label>
                       <input id="price" type="number" min="0" class="form-control"
-                             placeholder="請輸入售價" v-model="alertProducts.price">
+                             placeholder="請輸入售價" v-model.number="alertProducts.price">
                     </div>
                   </div>
                   <hr>
